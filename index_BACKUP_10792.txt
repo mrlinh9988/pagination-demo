@@ -1,5 +1,0 @@
-<<<<<<< HEAD
-fix issue 
-=======
-fix issue 53 2222222
->>>>>>> issue
