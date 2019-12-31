@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="/plugin/pagination/simplePagination.css" />
+</head>
+
+<body>
+    <div class="container">
+        <div id="pagination" class="col-12"></div>
+        <div class="row" id="content">
+
+        </div>
+    </div>
+</body>
+
+<!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script> -->
+<script type="text/javascript" src="/plugin/pagination/tests/lib/jquery.min.js"></script>
+<script type="text/javascript" src="/plugin/pagination/jquery.simplePagination.js"></script>
+
+<script>
+
+    loadAjax(1);
+
+    function loadPagination() {
+        $.ajax({
+            url: '/api/post/count',
+            method: 'get'
+        }).then(data => {
+            $('#pagination').pagination({
+                items: data,
+                itemsOnPage: 10,
+                cssStyle: 'dark-theme',
+                onPageClick: function (pageNumber, event) {
+                    console.log(pageNumber);
+                    loadAjax(pageNumber);
+
+                }
+            });
+        })
+    }
+
+    function loadAjax(pageNumber) {
+        $.ajax({
+            url: '/api/post?page=' + pageNumber,
+            method: 'get'
+        }).then(data => {
+
+            $('#content').html('');
+            loadPagination();
+            
+            for (let i = 0; i < data.length; i++) {
+                const element = data[i];
+                $('#content').append(`
+                    <div class="card no-gustered col-3" >
+                        <img class="card-img-top" src="${element.avatar}" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">${element.name}</h5>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                `)
+            }
+        })
+    }
+</script>
+
+</html>
